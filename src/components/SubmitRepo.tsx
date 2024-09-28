@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getRepoDepsAction } from "@/app/submit-repo";
+import { getRepoDepsAction } from "@/app/safe-actions/submit-repo";
 
 export function CardWithForm() {
   const repoRef = useRef<HTMLInputElement | null>(null);
@@ -26,7 +26,7 @@ export function CardWithForm() {
     console.log(res);
   };
   return (
-    <Card className="w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Submit a Repo</CardTitle>
         <CardDescription>

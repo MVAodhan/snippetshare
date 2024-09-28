@@ -28,8 +28,12 @@ export const getRepoDepsAction = actionClient
         }
       );
 
-      const json = atob(content.data.content);
+      const jsonString = atob(content.data.content);
+
+      return { payload: jsonString };
 
       //TODO: save in a DB
     }
+
+    return { payload: null };
   });
