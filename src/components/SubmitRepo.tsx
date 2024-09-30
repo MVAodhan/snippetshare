@@ -14,16 +14,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getRepoDepsAction } from "@/app/safe-actions/submit-repo";
 
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+
 export function CardWithForm() {
   const repoRef = useRef<HTMLInputElement | null>(null);
+  const createRepo = useMutation(api.repos.createRepo);
 
   const submitRepo = async () => {
     const repo = repoRef.current?.value as string;
     const res = await getRepoDepsAction({
       repo,
     });
+    if (res?.data?.payload) {
+      const json = JSON.parse(res?.data?.payload);
+      const deps = Object.keys(json.dependencies);
 
-    console.log(res);
+      await createRepo({ name: json.name, dependencies: deps });
+    }
   };
   return (
     <Card className="w-full">

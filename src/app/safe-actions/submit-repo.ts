@@ -16,7 +16,7 @@ export const getRepoDepsAction = actionClient
 
       const octokit = getOctokitInstance(process.env.GH_API_TOKEN!);
 
-      const content = await octokit.request(
+      const res = await octokit.request(
         "GET /repos/{owner}/{repo}/contents/{path}",
         {
           owner: segments[3],
@@ -28,7 +28,7 @@ export const getRepoDepsAction = actionClient
         }
       );
 
-      const jsonString = atob(content.data.content);
+      const jsonString = atob(res.data.content);
 
       return { payload: jsonString };
 
