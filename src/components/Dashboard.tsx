@@ -1,5 +1,6 @@
 "use client";
 
+import { useRepos } from "../../zustand/store";
 import { CardWithForm } from "./SubmitRepo";
 
 import {
@@ -11,6 +12,8 @@ import {
 } from "./ui/card";
 
 export default function Dashboard() {
+  const repos = useRepos((state) => state.repos);
+
   return (
     <main className="flex justify-center w-screen">
       <div className="w-4/5 flex flex-col md:flex-row gap-5">
@@ -28,10 +31,7 @@ export default function Dashboard() {
             <CardContent>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <ul>
-                    <li>Repo 1</li>
-                    <li>Repo 2</li>
-                  </ul>
+                  <ul>{repos?.map((repo, i) => <li key={i}>{repo}</li>)}</ul>
                 </div>
               </div>
             </CardContent>
