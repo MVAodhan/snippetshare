@@ -1,5 +1,6 @@
 "use client";
 
+import { Authenticated, Unauthenticated } from "convex/react";
 import { useRepos } from "../../zustand/store";
 import { CardWithForm } from "./SubmitRepo";
 
@@ -17,26 +18,31 @@ export default function Dashboard() {
   return (
     <main className="flex justify-center w-screen">
       <div className="w-4/5 flex flex-col md:flex-row gap-5">
-        <div className="flex w-full md:w-1/2">
-          <CardWithForm></CardWithForm>
-        </div>
-        <div className="flex w-full md:w-1/2">
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle>Your Repo&apos;s</CardTitle>
-              <CardDescription>
-                The repo&apos;s you&apos;ve shared
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid w-full items-center gap-4">
-                <div className="flex flex-col space-y-1.5">
-                  <ul>{repos?.map((repo, i) => <li key={i}>{repo}</li>)}</ul>
+        <Authenticated>
+          <div className="flex w-full md:w-1/2">
+            <CardWithForm></CardWithForm>
+          </div>
+          <div className="flex w-full md:w-1/2">
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle>Your Repo&apos;s</CardTitle>
+                <CardDescription>
+                  The repo&apos;s you&apos;ve shared
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    <ul>{repos?.map((repo, i) => <li key={i}>{repo}</li>)}</ul>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Authenticated>
+        <Unauthenticated>
+          <p>Please Log in to share your stack</p>
+        </Unauthenticated>
       </div>
     </main>
   );
