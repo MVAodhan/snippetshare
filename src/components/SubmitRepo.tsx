@@ -33,9 +33,36 @@ export function CardWithForm() {
       const json = JSON.parse(res?.data?.payload);
       const deps = Object.keys(json.dependencies);
 
+      let namespaceDependencies = [] as Array<string>;
+      let nonNamespaceDependencies = [] as Array<string>;
+
+      for (const dependency of deps) {
+        if (dependency.startsWith("@")) {
+          const paths = dependency.split("/");
+          namespaceDependencies = [
+            ...namespaceDependencies,
+            paths[0].split("@")[1],
+          ];
+        } else {
+          nonNamespaceDependencies = [...nonNamespaceDependencies, dependency];
+        }
+      }
+
+      let noTypesDependecies: Array<string> = [];
+      for (const dependency of namespaceDependencies) {
+        if (dependency !== "types") {
+          noTypesDependecies = [...noTypesDependecies, dependency];
+        }
+      }
+
+      const allDependencies = [
+        ...nonNamespaceDependencies,
+        ...noTypesDependecies,
+      ];
+
       addRepo(json.name);
 
-      await createRepo({ name: json.name, dependencies: deps });
+      await createRepo({ name: json.name, dependencies: allDependencies });
     }
   };
   return (
