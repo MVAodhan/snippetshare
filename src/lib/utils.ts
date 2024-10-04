@@ -25,3 +25,25 @@ export function getOctokitInstance(
   }
   return octokitInstance!;
 }
+
+export function areStackDependenciesInDependencies(
+  allDependencies: Array<string>,
+  stackDependencies: Array<string>
+) {
+  let stackDependencyInDependencies: Array<boolean> = [];
+  for (let i = 0; i <= stackDependencies.length; i++) {
+    if (allDependencies.includes(stackDependencies[i])) {
+      stackDependencyInDependencies = [...stackDependencyInDependencies, true];
+    }
+  }
+
+  return stackDependencyInDependencies;
+}
+export function filterOutTechnologyDependencies(
+  allDependencies: Array<string>,
+  stackDependencies: Array<string>
+) {
+  return allDependencies.filter(
+    (dependency) => !stackDependencies.includes(dependency)
+  );
+}

@@ -17,12 +17,16 @@ import { getRepoDepsAction } from "@/app/safe-actions/submit-repo";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useRepos } from "../../zustand/store";
+import {
+  areStackDependenciesInDependencies,
+  filterOutTechnologyDependencies,
+} from "@/lib/utils";
 
 export function CardWithForm() {
   const repoRef = useRef<HTMLInputElement | null>(null);
   const createRepo = useMutation(api.repos.createRepo);
 
-  const addRepo = useRepos((state) => state.addRepo);
+  const addRepo = useRepos((state) => state!.addRepo);
 
   const submitRepo = async () => {
     const repo = repoRef.current?.value as string;
@@ -60,9 +64,28 @@ export function CardWithForm() {
         ...noTypesDependecies,
       ];
 
+      const technology = {
+        name: "tailwind",
+        dependencies: ["tailwindcss", "postcss", "autoprefixer"],
+      };
+
+      let finalDependencies: Array<string> = [];
+      const stackDependencyInDependencies = areStackDependenciesInDependencies(
+        allDependencies,
+        technology.dependencies
+      );
+
+      if (stackDependencyInDependencies.every((dep) => dep === true)) {
+        finalDependencies = filterOutTechnologyDependencies(
+          allDependencies,
+          technology.dependencies
+        );
+        finalDependencies.push(technology.name);
+      }
+
       addRepo(json.name);
 
-      await createRepo({ name: json.name, dependencies: allDependencies });
+      await createRepo({ name: json.name, dependencies: finalDependencies });
     }
   };
   return (
