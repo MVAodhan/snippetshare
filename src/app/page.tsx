@@ -1,32 +1,31 @@
-"use client";
+// "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { db } from "./db";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
 
-export default function Home() {
-  const repos = useQuery(api.repos.getRepos);
+export default async function Home() {
 
+  
   return (
     <main className="w-screen h-screen flex justify-center items-center">
       <div className="w-4/5 h-4/5 flex flex-col gap-5 overflow-scroll">
-        {repos?.map((repo, i) => (
+        {/* {repos?.map((repo, i) => (
           <Card key={i}>
             <CardHeader>
               <CardTitle className="text-xl">{`${repo.owner}/${repo.name}`}</CardTitle>
-              {/* <CardDescription>Card Description</CardDescription> */}
+              <CardDescription>Card Description</CardDescription>
             </CardHeader>
-            {/* <CardContent>
+            <CardContent>
               <p>Card Content</p>
-            </CardContent> */}
+            </CardContent>
             <CardFooter className="pl-4">
               <div className="flex flex-wrap ">
                 {repo.dependencies?.map((dependency, i) => (
@@ -37,7 +36,7 @@ export default function Home() {
               </div>
             </CardFooter>
           </Card>
-        ))}
+        ))} */}
       </div>
     </main>
   );
