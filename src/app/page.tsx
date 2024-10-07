@@ -1,6 +1,6 @@
 // "use client";
 
-import { db } from "./db";
+// import { db } from "./db";
 
 // import {
 //   Card,
@@ -12,8 +12,6 @@ import { db } from "./db";
 // } from "@/components/ui/card";
 
 export default async function Home() {
-
-  
   return (
     <main className="w-screen h-screen flex justify-center items-center">
       <div className="w-4/5 h-4/5 flex flex-col gap-5 overflow-scroll">

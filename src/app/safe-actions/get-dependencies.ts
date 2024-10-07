@@ -4,12 +4,12 @@ import { z } from "zod";
 import { actionClient } from "@/lib/safe-action";
 import { getOctokitInstance } from "@/lib/utils";
 
-const schema = z.object({
+const getRepoSchema = z.object({
   repo: z.string().url().startsWith("https://github.com"),
 });
 
 export const getRepoDepsAction = actionClient
-  .schema(schema)
+  .schema(getRepoSchema)
   .action(async ({ parsedInput: { repo } }) => {
     if (repo) {
       const segments = repo.split("/");
@@ -31,8 +31,6 @@ export const getRepoDepsAction = actionClient
       const jsonString = atob(res.data.content);
 
       return { payload: jsonString };
-
-      //TODO: save in a DB
     }
 
     return { payload: null };

@@ -12,21 +12,26 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getRepoDepsAction } from "@/app/safe-actions/submit-repo";
+import { getRepoDepsAction } from "@/app/safe-actions/get-dependencies";
 
 import {
   areStackDependenciesInDependencies,
   filterOutTechnologyDependencies,
 } from "@/lib/utils";
+import { saveRepoAction } from "@/app/safe-actions/save-repo";
+import { useUser } from "@clerk/nextjs";
 // import { useUser } from "@clerk/nextjs";
 
 export function CardWithForm() {
   const repoRef = useRef<HTMLInputElement | null>(null);
 
-  // const { user: clerkUser } = useUser();
+  const { user: clerkUser } = useUser();
 
   const submitRepo = async () => {
     const repo = repoRef.current?.value as string;
+    const segments = repo.split("/");
+    const repoOwner = segments[3];
+    const repoName = segments[4];
     const res = await getRepoDepsAction({
       repo,
     });
@@ -79,8 +84,14 @@ export function CardWithForm() {
         );
         finalDependencies.push(technology.name);
       }
+      const savedRepo = await saveRepoAction({
+        userId: clerkUser?.id as string,
+        name: repoName,
+        dependencies: finalDependencies!,
+        owner: repoOwner,
+      });
 
-      /// Todo : Insert finalDependencies into db
+      console.log(savedRepo);
     }
   };
   return (
