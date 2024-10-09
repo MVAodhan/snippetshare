@@ -6,13 +6,8 @@ import {
   jsonb,
   date,
 } from "drizzle-orm/pg-core";
-export const user = pgTable("user", {
-  id: serial("id"),
-  name: text("name"),
-  repos: jsonb("repos"),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
-});
+import { createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const repo = pgTable("repo", {
   id: serial("id").primaryKey(),
@@ -21,4 +16,19 @@ export const repo = pgTable("repo", {
   name: text("name"),
   dependencies: jsonb("dependencies").$type<string[]>(),
   owner: text("owner"),
+});
+
+export const user = pgTable("user", {
+  id: serial("id"),
+  name: text("name"),
+  repos: jsonb("repos"),
+  clerkUser: text("clerk_user"),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
+});
+
+export const selectRepoSchema = createSelectSchema(repo);
+
+export const customRepoSchema = selectRepoSchema.extend({
+  dependencies: z.array(z.string()),
 });
