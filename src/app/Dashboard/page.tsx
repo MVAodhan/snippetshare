@@ -1,12 +1,13 @@
 import Dashboard from "@/components/Dashboard";
-import React from "react";
 
-const page = () => {
+
+
+export default function Home() {
+  
+
   return (
     <main className="w-full h-screen flex justify-center items-center">
-      <Dashboard />
+      <Dashboard  />
     </main>
   );
-};
-
-export default page;
+}

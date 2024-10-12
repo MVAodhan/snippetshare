@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CardWithForm } from "./SubmitRepo";
 
 import {
@@ -9,11 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-// import { useUser } from "@clerk/nextjs";
+import { getUserReposAction } from "@/app/safe-actions/get-user-repos";
 
 export default function Dashboard() {
-  // const { user: clerkUser } = useUser();
+  const [repos, setRepos] = useState<string[] | null>(null);
+  const getUser = async () => {
+    const data = await getUserReposAction();
 
+    setRepos(data?.data![0].repos);
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
   return (
     <main className="flex justify-center w-screen">
       <div className="w-4/5 flex flex-col md:flex-row gap-5">
@@ -31,11 +39,11 @@ export default function Dashboard() {
             <CardContent>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  {/* <ul>
-                    {userData?.repos.map((repo, i) => (
+                  <ul>
+                    {repos?.map((repo, i) => (
                       <li key={i}>{repo}</li>
                     ))}
-                  </ul> */}
+                  </ul>
                 </div>
               </div>
             </CardContent>

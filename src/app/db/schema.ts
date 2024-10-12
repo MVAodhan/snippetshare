@@ -19,7 +19,7 @@ export const repo = pgTable("repo", {
 });
 
 export const user = pgTable("user", {
-  id: serial("id"),
+  id: serial("id").primaryKey(),
   name: text("name"),
   repos: jsonb("repos"),
   clerkUser: text("clerk_user"),
