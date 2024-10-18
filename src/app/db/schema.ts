@@ -27,6 +27,12 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at"),
 });
 
+export const technology = pgTable("technology", {
+  id: serial("id").primaryKey(),
+  name: text("name"),
+  dependencies: jsonb("dependencies").$type<string[]>(),
+});
+
 export const selectRepoSchema = createSelectSchema(repo);
 
 export const customRepoSchema = selectRepoSchema.extend({

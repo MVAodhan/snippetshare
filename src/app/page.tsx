@@ -4,14 +4,7 @@ import { useEffect, useState } from "react";
 import { getReposAction } from "./safe-actions/get-repos";
 import { customRepoSchema } from "./db/schema";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { z } from "zod";
 
 type RepoSchema = z.infer<typeof customRepoSchema>;
@@ -33,12 +26,13 @@ export default function Home() {
         {repos?.map((repo, i) => (
           <Card key={i}>
             <CardHeader>
-              <CardTitle className="text-xl">{`${repo.owner}/${repo.name}`}</CardTitle>
-              <CardDescription>Card Description</CardDescription>
+              <CardTitle className="text-xl">
+                <a
+                  href={`https://github.com/${repo.owner}/${repo.name}`}
+                >{`github.com/${repo.owner}/${repo.name}`}</a>
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
+            {/* <CardContent></CardContent> */}
             <CardFooter className="pl-4">
               <div className="flex flex-wrap ">
                 {repo.dependencies?.map((dependency: string, i: number) => (
