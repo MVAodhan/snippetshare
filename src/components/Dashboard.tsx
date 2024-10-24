@@ -19,6 +19,7 @@ export default function Dashboard() {
 
     setRepos(data?.data![0].repos);
   };
+
   useEffect(() => {
     getUser();
   }, []);

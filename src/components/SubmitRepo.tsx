@@ -16,6 +16,11 @@ import { getRepoDepsAction } from "@/app/safe-actions/get-dependencies";
 
 import { saveRepoAction } from "@/app/safe-actions/save-repo";
 import { useUser } from "@clerk/nextjs";
+import { getTechnologiesAction } from "@/app/safe-actions/get-technologies";
+import {
+  areStackDependenciesInDependencies,
+  filterOutTechnologyDependencies,
+} from "@/lib/utils";
 
 export function CardWithForm() {
   const repoRef = useRef<HTMLInputElement | null>(null);
@@ -31,18 +36,39 @@ export function CardWithForm() {
       repo,
     });
 
+    let finalDeps;
     if (res?.data?.payload) {
       const json = JSON.parse(res?.data?.payload);
       const deps = Object.keys(json.dependencies);
 
+      const technologies = await getTechnologiesAction();
+
+      if (technologies?.data) {
+        for (const technology of technologies.data) {
+          const arr = areStackDependenciesInDependencies(
+            deps,
+            technology.dependencies!
+          );
+          if (arr.every((dep) => dep === true)) {
+            finalDeps = filterOutTechnologyDependencies(
+              deps,
+              technology.dependencies!
+            );
+            finalDeps.push(technology.name!);
+          }
+        }
+      }
+
+      console.log(finalDeps);
+
       await saveRepoAction({
         userId: clerkUser?.id as string,
         name: repoName,
-        dependencies: deps!,
+        dependencies: finalDeps ? finalDeps : deps,
         owner: repoOwner,
       });
 
-      repoRef.current!.value = "";
+      // repoRef.current!.value = "";
     }
   };
   return (
