@@ -21,8 +21,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="w-screen h-screen flex justify-center items-center">
-      <div className="w-4/5 h-4/5 flex flex-col gap-5 overflow-scroll">
+    <div className=" h-screen flex flex-coljustify-center items-center">
+      <div className="w- h-4/5 flex flex-col gap-5 overflow-scroll">
         {repos?.map((repo, i) => (
           <Card key={i}>
             <CardHeader>
@@ -45,6 +45,6 @@ export default function Home() {
           </Card>
         ))}
       </div>
-    </main>
+    </div>
   );
 }
