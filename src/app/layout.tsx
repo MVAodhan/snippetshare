@@ -46,7 +46,7 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
 
-              <main className="flex flex-col">
+              <main className="flex flex-col w-screen h-screen">
                 <Nav />
                 {children}
               </main>
