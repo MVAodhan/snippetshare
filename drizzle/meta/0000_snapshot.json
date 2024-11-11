@@ -1,5 +1,5 @@
 {
-  "id": "6f165e01-fdf9-46c1-b753-ead08c1aba0e",
+  "id": "267327db-7917-4fc2-81a6-23d93c74bbb6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -118,7 +118,7 @@
         },
         "author_id": {
           "name": "author_id",
-          "type": "uuid",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -160,15 +160,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "snippets_author_id_users_id_fk": {
-          "name": "snippets_author_id_users_id_fk",
+        "snippets_author_id_users_clerk_id_fk": {
+          "name": "snippets_author_id_users_clerk_id_fk",
           "tableFrom": "snippets",
           "tableTo": "users",
           "columnsFrom": [
             "author_id"
           ],
           "columnsTo": [
-            "id"
+            "clerk_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -188,8 +188,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "clerk_user": {
-          "name": "clerk_user",
+        "clerk_id": {
+          "name": "clerk_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -231,6 +231,13 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_clerk_id_unique": {
+          "name": "users_clerk_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerk_id"
+          ]
+        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,

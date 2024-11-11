@@ -3,7 +3,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
+ 
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -15,21 +15,9 @@ const items = [
     url: "/",
   },
   {
-    title: "Inbox",
-    url: "#",
-  },
-  {
-    title: "Calendar",
-    url: "#",
-  },
-  {
-    title: "Search",
-    url: "#",
-  },
-  {
-    title: "Settings",
-    url: "#",
-  },
+    title: "Share a Snippet",
+    url: "/share",
+  }
 ];
 
 export function AppSidebar() {
@@ -37,7 +25,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
