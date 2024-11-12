@@ -141,7 +141,6 @@ const SnippetForm = () => {
         code: codeRef.current?.value,
         tags,
       };
-      console.log("Form submitted:", formData);
 
       const savedSnippet = await saveSnippetAction({
         code: formData.code!,

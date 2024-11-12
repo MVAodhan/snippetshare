@@ -1,74 +1,54 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Search, Code, Plus } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Search, Code, Plus } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { getSnippetsAction } from "./safe-actions/get-snippets";
+import { type Snippet } from "./db/schema";
+import Link from "next/link";
 
 const ReactSnippetsPlatform = () => {
-  const [selectedTag, setSelectedTag] = useState('all');
+  const [selectedTag, setSelectedTag] = useState("all");
+  const [codeSnippets, setCodeSnippets] = useState<Snippet[]>([]);
+  const [filteredSnippets, setFilteredSnippets] = useState<Snippet[]>([]);
 
-  const sampleSnippets = [
-    {
-      id: 1,
-      title: "useLocalStorage Hook",
-      description: "Custom hook to persist state in localStorage with type safety",
-      tags: ["hooks", "typescript", "storage"],
-      code: `const useLocalStorage = <T,>(key: string, initialValue: T) => {
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      return initialValue;
-    }
-  });
+  const getSnippets = async () => {
+    const snippets = await getSnippetsAction();
 
-  const setValue = (value: T | ((val: T) => T)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.log(error);
+    console.log(snippets);
+    if (snippets && snippets.data) {
+      setCodeSnippets(snippets.data);
+      setFilteredSnippets(snippets.data);
     }
   };
 
-  return [storedValue, setValue] as const;
-};`,
-    },
-    {
-      id: 2,
-      title: "Responsive Image Component",
-      description: "A reusable image component with lazy loading and fallback",
-      tags: ["components", "typescript"],
-      code: `interface ImageProps {
-  src: string;
-  alt: string;
-  className?: string;
-}
+  useEffect(() => {
+    getSnippets();
+  }, []);
 
-const Image = ({ src, alt, className }: ImageProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const allTags = ["all", "react", "drizzle"];
 
-  return (
-    <div className={\`relative \${className}\`}>
-      <img
-        src={error ? '/fallback.png' : src}
-        alt={alt}
-        className={\`\${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity\`}
-        onLoad={() => setIsLoading(false)}
-        onError={() => setError(true)}
-      />
-      {isLoading && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
-    </div>
-  );
-};`,
+  const handleTagFilter = () => {
+    if (selectedTag === "all") {
+      setFilteredSnippets(codeSnippets);
+      return;
     }
-  ];
+    const filteredSnippets = codeSnippets.filter((snippet) => {
+      for (const tag of snippet.tags) {
+        if (tag.toLocaleLowerCase() === selectedTag) {
+          return snippet;
+        }
+      }
+    });
 
-  const allTags = ['all', 'hooks', 'components', 'typescript', 'storage'];
+    setFilteredSnippets(filteredSnippets);
+  };
+
+  useEffect(() => {
+    handleTagFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTag]);
 
   return (
     <div className="w-full h-full ">
@@ -76,29 +56,35 @@ const Image = ({ src, alt, className }: ImageProps) => {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="w-full sm:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">React Snippets</h1>
-            <p className="text-gray-600 text-sm sm:text-base">Discover and share React code patterns</p>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+              React Snippets
+            </h1>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Discover and share React code patterns
+            </p>
           </div>
-          <Button className="w-full sm:w-auto flex items-center justify-center gap-2">
-            <Plus size={16} />
-            <span>Share Snippet</span>
-          </Button>
+          <Link href="/share" className="text-primary">
+            <Button className="w-full sm:w-auto flex items-center justify-center gap-2">
+              <Plus size={16} />
+              <span>Share Snippet</span>
+            </Button>
+          </Link>
         </div>
 
         {/* Search & Filter Bar */}
         <div className="space-y-4 mb-8">
           <div className="flex items-center gap-2 p-3 border rounded-lg bg-white w-full">
             <Search className="text-gray-400 flex-shrink-0" />
-            <input 
+            <input
               type="text"
               placeholder="Search snippets..."
               className="w-full text-black outline-none bg-transparent text-sm sm:text-base"
             />
           </div>
-          
+
           <div className="flex gap-2 flex-wrap">
-            {allTags.map(tag => (
-              <Button 
+            {allTags.map((tag) => (
+              <Button
                 key={tag}
                 variant={selectedTag === tag ? "default" : "outline"}
                 onClick={() => setSelectedTag(tag)}
@@ -112,7 +98,7 @@ const Image = ({ src, alt, className }: ImageProps) => {
 
         {/* Snippets Grid */}
         <div className="grid gap-6">
-          {sampleSnippets.map(snippet => (
+          {filteredSnippets.map((snippet) => (
             <Card key={snippet.id} className="w-full overflow-hidden">
               <CardHeader className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -121,9 +107,9 @@ const Image = ({ src, alt, className }: ImageProps) => {
                     <span className="truncate">{snippet.title}</span>
                   </CardTitle>
                   <div className="flex flex-wrap gap-2">
-                    {snippet.tags.map(tag => (
-                      <span 
-                        key={tag} 
+                    {snippet.tags.map((tag) => (
+                      <span
+                        key={tag}
                         className="px-2 py-1 text-xs sm:text-sm bg-blue-100 text-blue-800 rounded capitalize"
                       >
                         {tag}
@@ -133,10 +119,12 @@ const Image = ({ src, alt, className }: ImageProps) => {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-black text-sm sm:text-base mb-4">{snippet.description}</p>
-                <div className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
-                  <pre className="text-xs sm:text-sm font-mono whitespace-pre text-black">
-                    <code>{snippet.code}</code>
+                <p className="text-black text-sm sm:text-base mb-4">
+                  {snippet.description}
+                </p>
+                <div className=" p-4 rounded-lg overflow-x-auto">
+                  <pre className="text-xs sm:text-sm font-mono">
+                    <code className="language-typescript">{snippet.code}</code>
                   </pre>
                 </div>
               </CardContent>
