@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Search, Code, Plus } from "lucide-react";
+import { Code, Plus, Heart } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getSnippetsAction } from "./safe-actions/get-snippets";
 import { type Snippet } from "./db/schema";
 import Link from "next/link";
+import { favoriteSnippet } from "./safe-actions/favorite-snippet";
 
 const ReactSnippetsPlatform = () => {
   const [selectedTag, setSelectedTag] = useState("all");
   const [codeSnippets, setCodeSnippets] = useState<Snippet[]>([]);
   const [filteredSnippets, setFilteredSnippets] = useState<Snippet[]>([]);
 
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const getSnippets = async () => {
     const snippets = await getSnippetsAction();
 
@@ -45,6 +47,24 @@ const ReactSnippetsPlatform = () => {
     setFilteredSnippets(filteredSnippets);
   };
 
+  const handleFavorite = async (id: string) => {
+    const res = await favoriteSnippet({
+      snippetId: id,
+    });
+
+    console.log(res);
+    if (res?.data && !res?.data?.error) {
+      if (favoriteIds.includes(id)) {
+        const filtered = favoriteIds.filter((id) => id !== id);
+        setFavoriteIds(filtered);
+      } else {
+        setFavoriteIds([...favoriteIds, id]);
+      }
+    }
+  };
+
+  console.log(favoriteIds);
+
   useEffect(() => {
     handleTagFilter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,14 +93,14 @@ const ReactSnippetsPlatform = () => {
 
         {/* Search & Filter Bar */}
         <div className="space-y-4 mb-8">
-          <div className="flex items-center gap-2 p-3 border rounded-lg bg-white w-full">
-            <Search className="text-gray-400 flex-shrink-0" />
+          {/* <div className="flex items-center gap-2 p-3 border rounded-lg bg-white w-full">
+             <Search className="text-gray-400 flex-shrink-0" />
             <input
               type="text"
               placeholder="Search snippets..."
               className="w-full text-black outline-none bg-transparent text-sm sm:text-base"
-            />
-          </div>
+            /> }
+          </div> */}
 
           <div className="flex gap-2 flex-wrap">
             {allTags.map((tag) => (
@@ -106,6 +126,7 @@ const ReactSnippetsPlatform = () => {
                     <Code size={20} className="flex-shrink-0" />
                     <span className="truncate">{snippet.title}</span>
                   </CardTitle>
+
                   <div className="flex flex-wrap gap-2">
                     {snippet.tags.map((tag) => (
                       <span
@@ -119,9 +140,25 @@ const ReactSnippetsPlatform = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-black text-sm sm:text-base mb-4">
+                <p className=" text-sm sm:text-base mb-4">
                   {snippet.description}
                 </p>
+                <div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-shrink-0 hover:bg-gray-100"
+                    onClick={() => handleFavorite(snippet.id)}
+                  >
+                    <Heart
+                      className={`h-5 w-5 ${
+                        favoriteIds.includes(snippet.id)
+                          ? "fill-current text-red-500"
+                          : ""
+                      }`}
+                    />
+                  </Button>
+                </div>
                 <div className=" p-4 rounded-lg overflow-x-auto">
                   <pre className="text-xs sm:text-sm font-mono">
                     <code className="language-typescript">{snippet.code}</code>
