@@ -31,6 +31,7 @@
     "next-safe-action": "^7.9.3",
     "next-themes": "^0.3.0",
     "octokit": "^4.0.2",
+    "prismjs": "^1.29.0",
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.12.7",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "drizzle-kit": "^0.24.2",

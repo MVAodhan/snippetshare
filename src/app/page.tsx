@@ -8,6 +8,7 @@ import { getSnippetsAction } from "./safe-actions/get-snippets";
 import { type Snippet } from "./db/schema";
 import Link from "next/link";
 import { favoriteSnippet } from "./safe-actions/favorite-snippet";
+import CodeSnippet from "@/components/code-snippet";
 
 const ReactSnippetsPlatform = () => {
   const [selectedTag, setSelectedTag] = useState("all");
@@ -160,9 +161,7 @@ const ReactSnippetsPlatform = () => {
                   </Button>
                 </div>
                 <div className=" p-4 rounded-lg overflow-x-auto">
-                  <pre className="text-xs sm:text-sm font-mono">
-                    <code className="language-typescript">{snippet.code}</code>
-                  </pre>
+                  <CodeSnippet code={snippet.code} language={"javascript"} />
                 </div>
               </CardContent>
             </Card>
