@@ -2,5 +2,6 @@ import { create } from "zustand";
 
 export const useRepos = create((set) => ({
   repos: [],
-  addRepo: (name) => set((state) => ({ repos: [...state.repos, name] })),
+  addRepo: (name: unknown) =>
+    set((state: { repos: [] }) => ({ repos: [...state.repos, name] })),
 }));
