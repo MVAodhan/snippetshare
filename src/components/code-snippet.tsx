@@ -20,7 +20,7 @@ const CodeSnippet = ({
     Prism.highlightAll();
   }, [code, language]);
   return (
-    <pre className="text-xs sm:text-sm font-mono rounded-md">
+    <pre className="text-xs sm:text-sm font-mono rounded-md bg-[#171717] p-5 dark:bg-transparent ">
       <code className={`language-${language}`}>{code}</code>
     </pre>
   );
